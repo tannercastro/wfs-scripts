@@ -1,0 +1,4 @@
+(function() {
+  const redirectUrl = "https://hcm19.sapsf.com/sf/idp-init/sso/wfs?saml2=true&RelayState=https%3A%2F%2Fb3sa.wta-us8.wfs.cloud%2Fworkforce%2FSSO.do%3FRelayState%3Dhttps%253A%252F%252Fb3sa.wta-us8.wfs.cloud%252Fworkforce%252FWebClock.do";
+  window.open(redirectUrl, '_blank');
+})();
