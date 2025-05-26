@@ -86,7 +86,7 @@
     // add dialog to document.body and then show() it
     // wfsCustomTile div must exist on screen before running the WFS scripts
     document.body.appendChild(dialog);
-    dialog.show();
+    dialog.open = true;
 
     const serverUnavailableCheck = function() {
       if (typeof WfsSSOLoginManager === 'undefined') {
