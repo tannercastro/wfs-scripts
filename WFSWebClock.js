@@ -76,7 +76,7 @@
       if (window.jQuery) {
         $('#wfsCustomDialog').remove();
       } else {
-        dialog.close();
+        dialog.open = false;
       }
     });
     footerBtn.innerHTML = "Close";
