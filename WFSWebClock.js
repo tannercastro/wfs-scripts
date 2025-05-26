@@ -67,9 +67,17 @@
     const footerBtn = document.createElement("ui5-button");
     footerBtn.setAttribute("slot", "footer");
     footerBtn.innerHTML = "Fechar";
+
+    // 👇 Correção forçada para esconder e remover o dialog
     footerBtn.addEventListener("click", function () {
-        dialog.open = false;
+        dialog.style.setProperty('display', 'none', 'important');
+        setTimeout(() => {
+            if (dialog && dialog.parentNode) {
+                dialog.parentNode.removeChild(dialog);
+            }
+        }, 500);
     });
+
     dialog.appendChild(footerBtn);
 
     // add dialog to document.body and open it
