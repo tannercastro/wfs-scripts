@@ -1,32 +1,30 @@
 (function () {
-    
+
     const wfsTileAction = 'viewBankBalances';
     const wfsssologinurl = "/sf/idp-init/sso/wfs-sso-login-done?saml2=true&RelayState=True";
 
-    
     let tileSize = ''.toLowerCase(); 
     let dialogWidth;
 
     switch (tileSize) {
-      case 'sm':
-      case 'small':
-        dialogWidth = '37.5%';
-        break;
-      case 'md':
-      case 'medium':
-        dialogWidth = '50%';
-        break;
-      case 'lg':
-      case 'large':
-        dialogWidth = '64%';
-        break;
-      case 'xl':
-      case 'xlarge':
-        dialogWidth = '80%';
-        break;
-      default:
-        // scale to the size of the tile contents
-        dialogWidth = 'auto';
+        case 'sm':
+        case 'small':
+            dialogWidth = '37.5%';
+            break;
+        case 'md':
+        case 'medium':
+            dialogWidth = '50%';
+            break;
+        case 'lg':
+        case 'large':
+            dialogWidth = '64%';
+            break;
+        case 'xl':
+        case 'xlarge':
+            dialogWidth = '80%';
+            break;
+        default:
+            dialogWidth = 'auto';
     }
 
     const wfsBaseUrl = "https://b3sa.wta-us8.wfs.cloud/workforce/";
@@ -65,10 +63,12 @@
     p.appendChild(wfsCustomTile);
     dialog.appendChild(p);
 
+    // create the dialog footer button and add it directly
     const footerBtn = document.createElement("ui5-button");
     footerBtn.setAttribute("slot", "footer");
     footerBtn.innerHTML = "Fechar";
 
+    // 👇 Correção forçada para esconder e remover o dialog
     footerBtn.addEventListener("click", function () {
         dialog.style.setProperty('display', 'none', 'important');
         setTimeout(() => {
@@ -80,40 +80,36 @@
 
     dialog.appendChild(footerBtn);
 
+    // add dialog to document.body and open it
     document.body.appendChild(dialog);
     dialog.open = true;
 
-    const serverUnavailableCheck = function() {
-      if (typeof WfsSSOLoginManager === 'undefined') {
-        let style = window.getComputedStyle(document.body);
-        let serverDownMessage = 'The server could not be reached';
-        let messageDiv = document.createElement('div');
-        messageDiv.width = '100%';
-        messageDiv.style.margin = '8px';
-        messageDiv.style.fontFamily = style.fontFamily;
-        messageDiv.style.fontSize = style.fontSize;
-        messageDiv.innerHTML = serverDownMessage;
-        if (dialog) {
-          let sfLoadingContainer = dialog.getElementsByClassName('sfLoadingContainer')[0];
-          dialog.replaceChild(messageDiv, sfLoadingContainer);
+    const serverUnavailableCheck = function () {
+        if (typeof WfsSSOLoginManager === 'undefined') {
+            let style = window.getComputedStyle(document.body);
+            let serverDownMessage = 'The server could not be reached';
+            let messageDiv = document.createElement('div');
+            messageDiv.style.margin = '8px';
+            messageDiv.style.fontFamily = style.fontFamily;
+            messageDiv.style.fontSize = style.fontSize;
+            messageDiv.innerHTML = serverDownMessage;
+            if (dialog) {
+                let sfLoadingContainer = dialog.getElementsByClassName('sfLoadingContainer')[0];
+                dialog.replaceChild(messageDiv, sfLoadingContainer);
+            }
         }
-      }
     };
 
-    // wait in background for 10 seconds, then check if server did not respond
     setTimeout(serverUnavailableCheck, 10000);
 
-    // check for existence of wfsSSOLoginManager script
-    // load it if it does not exist
-      if (!document.getElementById('wfsSSOLoginManager')) {
+    if (!document.getElementById('wfsSSOLoginManager')) {
         let wfsSSOLoginManagerScript = document.createElement('script');
         wfsSSOLoginManagerScript.id = 'wfsSSOLoginManager';
         wfsSSOLoginManagerScript.type = 'text/javascript';
         wfsSSOLoginManagerScript.src = wfsBaseUrl + 'SuccessFactors.do?action=wfsSSOLoginManager';
         document.head.appendChild(wfsSSOLoginManagerScript);
-      } else if (typeof WfsSSOLoginManager !== 'undefined' && WfsSSOLoginManager.isTilePollingComplete()) {
-        // script has already been loaded and WfsSSOLoginManager should exist
+    } else if (typeof WfsSSOLoginManager !== 'undefined' && WfsSSOLoginManager.isTilePollingComplete()) {
         WfsSSOLoginManager.restartTilePolling();
-      }
+    }
 
 })();
